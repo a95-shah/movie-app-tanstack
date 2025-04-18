@@ -1,7 +1,7 @@
+
 import MovieCard from '../components/MovieCard';
 import { useState, useEffect } from 'react';
 import { searchMovies, getPopularMovies } from '../services/Api';
-
 
 function Home() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -17,7 +17,6 @@ function Home() {
         orderBy: "Latest"
     });
     
-
     useEffect(() => {
         const loadPopularMovies = async () => {
             try {
@@ -35,11 +34,11 @@ function Home() {
 
     const handleSearch = async (e) => {
         e.preventDefault();
-        if (!searchQuery.trim()) return;
         if (loading) return;
 
         setLoading(true);
         try {
+            // Now we pass both query (which might be empty) and filters
             const searchResults = await searchMovies(searchQuery, filters);
             setMovies(searchResults);
             setError(null);
@@ -59,17 +58,17 @@ function Home() {
         <div className="bg-black min-h-screen p-6">
             {/* Search Form */}
             <form onSubmit={handleSearch} className="max-w-4xl mx-auto mb-8 bg-black p-6 rounded-lg shadow-md">
-                <label className="block text-white font-semibold mb-2">Search Term:</label>
+                {/* <label className="block text-white font-semibold mb-2">Search Term:</label> */}
                 <input
                     type="text"
                     placeholder="Search for a movie..."
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full border text-center border-gray-300 rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
 
                 {/* Filters */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4 text-center">
                     {[
                         { name: "quality", label: "Quality", options: ["All", "4K", "1080p", "720p"] },
                         { name: "genre", label: "Genre", options: ["All", "Drama", "Adventure", "Crime", "Action", "Comedy"] },
@@ -84,7 +83,7 @@ function Home() {
                                 name={name}
                                 value={filters[name]}
                                 onChange={handleFilterChange}
-                                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className="w-full border text-center border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                             >
                                 {options.map((option) => (
                                     <option key={option} value={option}>{option}</option>
@@ -108,14 +107,18 @@ function Home() {
                 <div className='loading'>Loading...</div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                    {movies.map((movie) => (
-                        <MovieCard movie={movie} key={movie.id} />
-                    ))}
+                    {movies.length > 0 ? (
+                        movies.map((movie) => (
+                            <MovieCard movie={movie} key={movie.id} />
+                        ))
+                    ) : (
+                        <div className="col-span-4 text-center text-white text-lg">
+                            No movies found. Try adjusting your search criteria.
+                        </div>
+                    )}
                 </div>
             )}
-            
         </div>
-        
     );
 }
 

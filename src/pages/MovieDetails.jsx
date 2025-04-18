@@ -27,7 +27,7 @@ const MovieDetails = () => {
           <h1 className="text-4xl font-bold">{movie.title} </h1>
           <p className="text-green-400 text-lg">{movie.release_date?.split("-")[0]} | {movie.original_language?.toUpperCase()}</p>
           <p className="mt-2 text-lg text-gray-300">{movie.genres?.map(g => g.name).join(", ")}</p>
-          <p className="mt-4">{movie.overview}</p>
+          <p className="mt-4 text-left">{movie.overview}</p>
 
           {/* Ratings & Likes */}
           <div className="flex items-center gap-4 mt-4">
