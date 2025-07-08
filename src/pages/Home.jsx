@@ -82,7 +82,7 @@ function Home() {
         </button>
       </form>
 
-      {/* Debug info - Remove in production */}
+      {/* Debug/*}
       {/* <div className="max-w-4xl mx-auto mb-4 text-white text-sm">
         <p>Search Query: "{searchQuery}"</p>
         <p>Active Filters: {JSON.stringify(filters)}</p>
