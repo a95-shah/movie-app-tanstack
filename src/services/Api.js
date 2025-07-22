@@ -1,7 +1,20 @@
+import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
+
 const API_KEY = 'ee28a6b0c12761ad7bf116fbb11a2118';
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-//  Fetch popular movies
+// Query Keys Factory
+export const movieQueries = {
+  all: ['movies'],
+  popular: () => [...movieQueries.all, 'popular'],
+  details: (id) => [...movieQueries.all, 'details', id],
+  search: (query, filters) => 
+    [...movieQueries.all, 'search', query, filters],
+  discover: (filters) => 
+    [...movieQueries.all, 'discover', filters],
+};
+
+// Original API Functions (exported for backward compatibility)
 export const getPopularMovies = async () => {
   const response = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
   if (!response.ok) throw new Error("Failed to fetch popular movies");
@@ -9,14 +22,12 @@ export const getPopularMovies = async () => {
   return data.results;
 };
 
-//  Fetch movie details by ID
 export const getMovieDetails = async (id) => {
   const response = await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}`);
   if (!response.ok) throw new Error("Failed to fetch movie details");
   return await response.json();
 };
 
-//  Search movies with optional filters
 export const searchMovies = async (query, filters = {}) => {
   const params = new URLSearchParams({ api_key: API_KEY });
 
@@ -37,7 +48,6 @@ export const searchMovies = async (query, filters = {}) => {
   }
 };
 
-//  Discover movies with filters (used when query is empty)
 export const discoverMovies = async (filters = {}) => {
   const params = new URLSearchParams({ api_key: API_KEY });
 
@@ -78,7 +88,7 @@ export const discoverMovies = async (filters = {}) => {
   };
   params.append('sort_by', sortMap[filters.orderBy] || 'popularity.desc');
 
-  console.log('Discover API URL:', `${BASE_URL}/discover/movie?${params}`); // Debug log
+  console.log('Discover API URL:', `${BASE_URL}/discover/movie?${params}`);
 
   const response = await fetch(`${BASE_URL}/discover/movie?${params}`);
   if (!response.ok) throw new Error("Failed to discover movies");
@@ -86,7 +96,7 @@ export const discoverMovies = async (filters = {}) => {
   return data.results;
 };
 
-//  Filter results locally (used after search API)
+// Filter results locally (same as your original)
 const filterResults = (movies, filters) => {
   let filteredMovies = [...movies];
 
@@ -142,4 +152,88 @@ const filterResults = (movies, filters) => {
   }
 
   return filteredMovies;
+};
+
+// TanStack Query Hooks
+
+// Hook for popular movies
+export const usePopularMovies = (options = {}) => {
+  return useQuery({
+    queryKey: movieQueries.popular(),
+    queryFn: getPopularMovies,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // 10 minutes
+    ...options,
+  });
+};
+
+// Hook for movie details
+export const useMovieDetails = (id, options = {}) => {
+  return useQuery({
+    queryKey: movieQueries.details(id),
+    queryFn: () => getMovieDetails(id),
+    enabled: !!id, // Only run if id exists
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    cacheTime: 30 * 60 * 1000, // 30 minutes
+    ...options,
+  });
+};
+
+// Hook for searching movies
+export const useSearchMovies = (query, filters = {}, options = {}) => {
+  return useQuery({
+    queryKey: movieQueries.search(query, filters),
+    queryFn: () => searchMovies(query, filters),
+    enabled: !!query || Object.keys(filters).length > 0,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    cacheTime: 5 * 60 * 1000, // 5 minutes
+    ...options,
+  });
+};
+
+// Hook for discovering movies
+export const useDiscoverMovies = (filters = {}, options = {}) => {
+  return useQuery({
+    queryKey: movieQueries.discover(filters),
+    queryFn: () => discoverMovies(filters),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // 10 minutes
+    ...options,
+  });
+};
+
+// Infinite query hook for paginated results (bonus feature)
+export const useInfinitePopularMovies = (options = {}) => {
+  return useInfiniteQuery({
+    queryKey: [...movieQueries.popular(), 'infinite'],
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await fetch(
+        `${BASE_URL}/movie/popular?api_key=${API_KEY}&page=${pageParam}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch popular movies");
+      const data = await response.json();
+      return {
+        results: data.results,
+        nextPage: pageParam < data.total_pages ? pageParam + 1 : undefined,
+        totalPages: data.total_pages,
+      };
+    },
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 10 * 60 * 1000,
+    ...options,
+  });
+};
+
+// Utility functions for cache invalidation
+export const invalidateMovieQueries = (queryClient) => {
+  queryClient.invalidateQueries({ queryKey: movieQueries.all });
+};
+
+export const invalidatePopularMovies = (queryClient) => {
+  queryClient.invalidateQueries({ queryKey: movieQueries.popular() });
+};
+
+export const invalidateMovieDetails = (queryClient, id) => {
+  queryClient.invalidateQueries({ queryKey: movieQueries.details(id) });
 };

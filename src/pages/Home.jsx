@@ -1,6 +1,6 @@
 import MovieCard from '../components/MovieCard';
 import { useState } from 'react';
-import { useMovies } from '../hooks/useMovies'; // ✅ Custom query hook
+import { useMovies } from '../hooks/useMovies'; //  Custom query hook
 
 function Home() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -18,7 +18,7 @@ function Home() {
     isLoading,
     isError,
     error,
-  } = useMovies(searchQuery, filters); // ✅ Using TanStack query hook
+  } = useMovies(searchQuery, filters); //  Using TanStack query hook
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -76,7 +76,7 @@ function Home() {
 
         <button
           type="submit"
-          className="w-full px-6 mt-3 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-400"
+          className="w-full px-6 mt-3 py-2 bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-900 text-white font-medium rounded-lg hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-400"
         >
           Search
         </button>
