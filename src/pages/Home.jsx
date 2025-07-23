@@ -22,7 +22,7 @@ function Home() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // Remove refetch() - TanStack Query will automatically refetch when searchQuery changes
+    //  TanStack Query will automatically refetch when searchQuery changes
   };
 
   const handleFilterChange = (e) => {

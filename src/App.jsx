@@ -1,14 +1,14 @@
+// App.jsx
 import Home from './pages/Home';
 import { Routes, Route } from 'react-router-dom';
 import Favorites from './pages/Favorites';
-import MovieDetails from './pages/MovieDetails'; // ✅ Import MovieDetails
+import MovieDetails from './pages/MovieDetails';
 import NavBar from './components/NavBar';
 import './App.css';
-import { MovieProvider } from './contexts/MovieContext';
 
 function App() {
   return (
-    <MovieProvider>
+    <>
       <NavBar />
       <main className='main-content'>
         <Routes>
@@ -17,7 +17,7 @@ function App() {
           <Route path="/movie/:id" element={<MovieDetails />} />
         </Routes>
       </main>
-    </MovieProvider>
+    </>
   );
 }
 

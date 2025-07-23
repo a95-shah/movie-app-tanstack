@@ -1,31 +1,25 @@
 import { useState } from "react";
+import { Link } from "react-router-dom"; 
 
 function NavBar() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  // Mock Link component for demo purposes
-  const Link = ({ to, children, className, onClick }) => (
-    <a href={to} className={className} onClick={onClick}>
-      {children}
-    </a>
-  );
+const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="relative bg-gradient-to-r from-indigo-900 via-purple-900 to-pink-900 backdrop-blur-lg bg-opacity-80 text-white shadow-2xl w-full border-b border-white/20">
       {/* Animated background overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 animate-pulse"></div>
-      
+
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-4">
         <div className="flex justify-between items-center">
-          {/* Brand Logo with glow effect */}
+          {/* Brand Logo */}
           <div className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent hover:scale-105 transition-transform duration-300">
             <Link to="/" className="flex items-center space-x-2">
               <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-lg flex items-center justify-center shadow-lg">
                 <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM4 8a1 1 0 000 2h1v3a1 1 0 001 1h4a1 1 0 001-1v-3h1a1 1 0 100-2H4z"/>
+                  <path d="M2 6a2 2 0 012-2h6l2 2h6a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM4 8a1 1 0 000 2h1v3a1 1 0 001 1h4a1 1 0 001-1v-3h1a1 1 0 100-2H4z" />
                 </svg>
               </div>
-              <span className="hidden sm:block">CinemaHub</span>
+              <span className="hidden sm:block">AbbottCinima</span>
             </Link>
           </div>
 
@@ -44,7 +38,7 @@ function NavBar() {
             >
               <span className="relative z-10 flex items-center space-x-2">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"/>
+                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                 </svg>
                 <span>Favorites</span>
               </span>
@@ -62,7 +56,7 @@ function NavBar() {
             </button>
           </div>
 
-          {/* Mobile Hamburger Menu */}
+          {/* Mobile Hamburger */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-2 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all duration-300"
@@ -83,16 +77,14 @@ function NavBar() {
         </div>
 
         {/* Mobile Menu */}
-        <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isOpen ? 'max-h-64 opacity-100 mt-4' : 'max-h-0 opacity-0'
-        }`}>
+        <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-64 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 space-y-4 border border-white/20">
             <Link
               to="/"
               onClick={() => setIsOpen(false)}
               className="block px-4 py-3 text-lg font-medium hover:bg-white/10 rounded-xl transition-all duration-300 hover:text-cyan-300"
             >
-               Home
+              Home
             </Link>
             <Link
               to="/favorites"
