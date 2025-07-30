@@ -237,3 +237,4 @@ export const invalidatePopularMovies = (queryClient) => {
 export const invalidateMovieDetails = (queryClient, id) => {
   queryClient.invalidateQueries({ queryKey: movieQueries.details(id) });
 };
+

@@ -13,7 +13,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <MovieProvider> {/* ✅ Wrap App in MovieProvider */}
+        <MovieProvider> {/*  Wrap App in MovieProvider */}
           <App />
         </MovieProvider>
       </BrowserRouter>

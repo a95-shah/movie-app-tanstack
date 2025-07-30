@@ -33,3 +33,4 @@ export const MovieProvider = ({ children }) => {
         {children}
     </MovieContext.Provider>
 }
+// 
